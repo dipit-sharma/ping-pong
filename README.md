@@ -1,50 +1,130 @@
-# Welcome to your Expo app 👋
+# Ping Pong - Multiplayer Game
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A real-time multiplayer ping pong game built with React Native, React Reanimated, and Socket.IO.
 
-## Get started
+## Features
 
-1. Install dependencies
+- 🏓 Real-time multiplayer gameplay
+- 🎮 Draggable paddle controls
+- ⚡ Smooth animations with React Reanimated
+- 🌐 WebSocket communication
+- 📱 Cross-platform (iOS, Android, Web)
 
+## Game Components
+
+1. **Stage** - A rectangular game area with black background and grey border
+2. **Paddle** - White rectangular paddles for hitting the ball
+3. **Ball** - White circular ball that bounces off paddles and walls
+4. **DraggablePaddle** - User-controlled paddle with touch gestures
+
+## Setup
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+- Expo CLI
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd ping-pong
+   ```
+
+2. Install client dependencies:
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. Install server dependencies:
    ```bash
-   npx expo start
+   cd server
+   npm install
+   cd ..
    ```
 
-In the output, you'll find options to open the app in a
+### Running the Application
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+1. Start the Socket.IO server:
+   ```bash
+   cd server
+   npm start
+   ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+2. In a new terminal, start the React Native app:
+   ```bash
+   npm start
+   ```
 
-## Get a fresh project
+3. Open the app on your device or simulator:
+   - Press `i` for iOS simulator
+   - Press `a` for Android emulator
+   - Press `w` for web browser
 
-When you're ready, run:
+## How to Play
 
-```bash
-npm run reset-project
+1. Open the app on two different devices/browsers
+2. Each player will be automatically assigned to either the top or bottom paddle
+3. Drag your paddle horizontally to move it
+4. Try to hit the ball and prevent it from passing your side
+5. The ball will bounce off paddles and walls
+6. If the ball goes past your paddle, it will reset to the center
+
+## Game Mechanics
+
+- **Ball Physics**: The ball bounces off paddles and walls with realistic physics
+- **Paddle Movement**: Smooth, responsive paddle controls with gesture recognition
+- **Multiplayer Sync**: Real-time synchronization of game state between players
+- **Collision Detection**: Accurate collision detection between ball and paddles
+
+## Technical Stack
+
+- **Frontend**: React Native, Expo, React Reanimated
+- **Backend**: Node.js, Express, Socket.IO
+- **Animations**: React Reanimated for smooth 60fps animations
+- **Gestures**: React Native Gesture Handler for touch controls
+
+## Project Structure
+
+```
+ping-pong/
+├── app/                    # Expo Router app directory
+├── components/
+│   └── game/              # Game components
+│       ├── Stage.tsx      # Game stage component
+│       ├── Paddle.tsx     # Static paddle component
+│       ├── DraggablePaddle.tsx # User-controlled paddle
+│       ├── Ball.tsx       # Ball component
+│       └── PingPongGame.tsx # Main game component
+├── server/                # Socket.IO server
+│   ├── server.js         # Main server file
+│   ├── package.json      # Server dependencies
+│   └── README.md         # Server documentation
+└── package.json          # Client dependencies
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Development
 
-## Learn more
+### Adding New Features
 
-To learn more about developing your project with Expo, look at the following resources:
+- Game components are in `components/game/`
+- Server logic is in `server/server.js`
+- Main game screen is in `app/(tabs)/index.tsx`
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Customization
 
-## Join the community
+- Modify game dimensions in `server/server.js` (stage width/height)
+- Adjust ball speed and physics in the `updateBall()` function
+- Change visual styling in component StyleSheet objects
 
-Join our community of developers creating universal apps.
+## Troubleshooting
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- **Connection Issues**: Make sure the server is running on port 3001
+- **Gesture Problems**: Ensure React Native Gesture Handler is properly configured
+- **Animation Lag**: Check that React Reanimated is working correctly
+
+## License
+
+This project is open source and available under the MIT License.
