@@ -1,10 +1,12 @@
 import { PingPongGame } from '@/components/game/PingPongGame';
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-export default function HomeScreen() {
+export default function SinglePlayerScreen() {
   return (
-    <PingPongGame serverUrl="http://localhost:3001" />
+    <View style={styles.container}>
+      <PingPongGame/>
+    </View>
   );
 }
 
@@ -12,4 +14,4 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-});
+}); 

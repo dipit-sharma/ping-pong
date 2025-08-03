@@ -24,3 +24,25 @@ export const Colors = {
     tabIconSelected: tintColorDark,
   },
 };
+
+export const defaultGameState = {
+  ball: {
+    x: 200,
+    y: 300,
+    velocityX: 3,
+    velocityY: 3,
+    radius: 10
+  },
+  paddles: {
+    top: { x: 150, y: 50, width: 100, height: 20 },
+    bottom: { x: 150, y: 550, width: 100, height: 20 }
+  },
+  players: {
+    top: null,
+    bottom: null
+  },
+  stage: {
+    width: 400,
+    height: 600
+  }
+};

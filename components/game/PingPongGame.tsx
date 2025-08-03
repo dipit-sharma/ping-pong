@@ -1,12 +1,16 @@
+import { defaultGameState } from '@/constants/Colors';
+import { useGameEngine } from '@/hooks/useGameEngine';
+import { router } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { io, Socket } from 'socket.io-client';
+import { GameOverModal } from '../GameOverModal';
 import { Ball } from './Ball';
 import { DraggablePaddle } from './DraggablePaddle';
 import { Paddle } from './Paddle';
 import { Stage } from './Stage';
 
-interface GameState {
+export interface GameState {
   ball: {
     x: number;
     y: number;
@@ -32,20 +36,44 @@ interface PingPongGameProps {
   serverUrl?: string;
 }
 
-export const PingPongGame: React.FC<PingPongGameProps> = ({ 
-  serverUrl = 'http://localhost:3001' 
+export const PingPongGame: React.FC<PingPongGameProps> = ({
+  serverUrl = null
 }) => {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [playerPosition, setPlayerPosition] = useState<'top' | 'bottom' | null>(null);
   const [isConnected, setIsConnected] = useState(false);
-  const [gameStatus, setGameStatus] = useState<'waiting' | 'playing' | 'stopped'>('waiting');
-  
+  const [gameStatus, setGameStatus] = useState<'waiting' | 'playing' | 'stopped' | 'over'>('waiting');
+  const [showModal, setShowModal] = useState<boolean>(false);
+
   const socketRef = useRef<Socket | null>(null);
+  const gameStateRef = useRef<GameState | null>(null);
+
+  const onGameOver = () => {
+    setShowModal(true);
+    setGameStatus('over')
+  }
+  const { gameState: singlePlayerState, updateBottomPaddle = () => { } } = useGameEngine(serverUrl, onGameOver);
 
   useEffect(() => {
+    if (!serverUrl) {
+      gameStateRef.current = defaultGameState;
+      setPlayerPosition('bottom');
+      setIsConnected(true);
+
+      setGameState(singlePlayerState);
+      setGameStatus('playing')
+      return;
+    }
+  }, [serverUrl, singlePlayerState, gameStatus])
+
+  useEffect(() => {
+    if(!serverUrl) return;
     // Connect to server
-    const socket = io(serverUrl);
-    socketRef.current = socket;
+    let socket = socketRef.current;
+    if (!socket) {
+      socket = io(serverUrl);
+      socketRef.current = socket;
+    }
 
     socket.on('connect', () => {
       console.log('Connected to server');
@@ -84,16 +112,29 @@ export const PingPongGame: React.FC<PingPongGameProps> = ({
     return () => {
       socket.disconnect();
     };
-  }, [serverUrl]);
+  }, []);
 
   const handlePaddleMove = (x: number) => {
     if (socketRef.current && playerPosition) {
-      socketRef.current.emit('movePaddle', {
+      (socketRef.current as Socket).emit('movePaddle', {
         position: playerPosition,
         x: x
       });
     }
+
+    if (gameStateRef.current) {
+      updateBottomPaddle(x);
+    }
   };
+
+  const onGoToHome = () => {
+    router.push('/');
+  }
+
+  const onPlayAgain = () => {
+    setShowModal(false);
+    setGameStatus('playing')
+  }
 
   if (!isConnected) {
     return (
@@ -118,7 +159,7 @@ export const PingPongGame: React.FC<PingPongGameProps> = ({
           Waiting for another player to join...
         </Text>
         <Text style={styles.positionText}>
-          Your position: {playerPosition || 'Unknown'}
+          You can open this link in other tab to play as second player
         </Text>
       </View>
     );
@@ -137,21 +178,21 @@ export const PingPongGame: React.FC<PingPongGameProps> = ({
     <View style={styles.container}>
       <View style={styles.gameInfo}>
         <Text style={styles.infoText}>
-          Position: {playerPosition === 'top' ? 'Top Paddle' : 'Bottom Paddle'}
+          Drag the {playerPosition === 'top' ? 'Top Paddle' : 'Bottom Paddle'}
         </Text>
         <Text style={styles.infoText}>
-          Status: {gameStatus}
+          This is a game created using react-native
         </Text>
       </View>
-      
+
       <Stage width={gameState.stage.width} height={gameState.stage.height}>
         {/* Ball */}
-        <Ball 
-          x={gameState.ball.x} 
-          y={gameState.ball.y} 
-          radius={gameState.ball.radius} 
+        <Ball
+          x={gameState.ball.x}
+          y={gameState.ball.y}
+          radius={gameState.ball.radius}
         />
-        
+
         {/* Top Paddle */}
         {playerPosition === 'top' ? (
           <DraggablePaddle
@@ -170,7 +211,7 @@ export const PingPongGame: React.FC<PingPongGameProps> = ({
             height={gameState.paddles.top.height}
           />
         )}
-        
+
         {/* Bottom Paddle */}
         {playerPosition === 'bottom' ? (
           <DraggablePaddle
@@ -190,6 +231,9 @@ export const PingPongGame: React.FC<PingPongGameProps> = ({
           />
         )}
       </Stage>
+      {
+        showModal && <GameOverModal onGoToHome={onGoToHome} onPlayAgain={onPlayAgain} />
+      }
     </View>
   );
 };
