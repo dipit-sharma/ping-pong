@@ -2,7 +2,7 @@ import { GameState } from "@/components/game/PingPongGame";
 import { defaultGameState } from "@/constants/Colors";
 import { useEffect, useRef, useState } from "react";
 
-export const useGameEngine = (url: string | null, onGameOver: Function) => {
+export const useGameEngine = (url: string | null, onGameOver: Function, playSound?: () => void) => {
     if (url) return { gameState: null };
 
     const id = useRef<NodeJS.Timeout | null>(null);
@@ -27,7 +27,7 @@ export const useGameEngine = (url: string | null, onGameOver: Function) => {
                         }
                     }
                 }
-                newState = { ...updateBall(newState, onGameOver) };
+                newState = { ...updateBall(newState, onGameOver, playSound) };
                 return newState;
             });
         }, 16);
@@ -40,7 +40,7 @@ export const useGameEngine = (url: string | null, onGameOver: Function) => {
     return { gameState, updateBottomPaddle };
 }
 
-function updateBall(gameState: GameState, onGameOver: Function) {
+function updateBall(gameState: GameState, onGameOver: Function, playSound?: () => void) {
     // Update ball position
     gameState.ball.x += gameState.ball.velocityX;
     gameState.ball.y += gameState.ball.velocityY;
@@ -48,6 +48,10 @@ function updateBall(gameState: GameState, onGameOver: Function) {
     // Ball collision with walls
     if (gameState.ball.x <= gameState.ball.radius || gameState.ball.x >= gameState.stage.width - gameState.ball.radius) {
         gameState.ball.velocityX *= -1;
+        if (playSound) {
+            console.log('Playing wall collision sound');
+            playSound();
+        }
     }
 
     // Ball collision with paddles
@@ -62,6 +66,10 @@ function updateBall(gameState: GameState, onGameOver: Function) {
         gameState.ball.velocityY *= -1;
         // Add some randomness to make it more interesting
         gameState.ball.velocityX += (Math.random() - 0.5) * 2;
+        if (playSound) {
+            console.log('Playing top paddle collision sound');
+            playSound();
+        }
     }
 
     // Bottom paddle collision
@@ -72,6 +80,10 @@ function updateBall(gameState: GameState, onGameOver: Function) {
         gameState.ball.velocityY *= -1;
         // Add some randomness to make it more interesting
         gameState.ball.velocityX += (Math.random() - 0.5) * 2;
+        if (playSound) {
+            console.log('Playing bottom paddle collision sound');
+            playSound();
+        }
     }
 
     // Ball out of bounds - reset

@@ -40,54 +40,57 @@ const gameState = {
 // Game loop
 let gameInterval;
 
-function startGameLoop() {
+function startGameLoop(playSound) {
   if (gameInterval) return;
-  
+
   gameInterval = setInterval(() => {
-    updateBall();
+    updateBall(playSound);
     io.emit('gameState', gameState);
   }, 16); // ~60 FPS
 }
 
-function updateBall() {
+function updateBall(playSound) {
   // Update ball position
   gameState.ball.x += gameState.ball.velocityX;
   gameState.ball.y += gameState.ball.velocityY;
-  
+
   // Ball collision with walls
   if (gameState.ball.x <= gameState.ball.radius || gameState.ball.x >= gameState.stage.width - gameState.ball.radius) {
     gameState.ball.velocityX *= -1;
+    playSound();
   }
-  
+
   // Ball collision with paddles
   const topPaddle = gameState.paddles.top;
   const bottomPaddle = gameState.paddles.bottom;
-  
+
   // Top paddle collision
   if (gameState.ball.y <= topPaddle.y + topPaddle.height + gameState.ball.radius &&
-      gameState.ball.y >= topPaddle.y - gameState.ball.radius &&
-      gameState.ball.x >= topPaddle.x &&
-      gameState.ball.x <= topPaddle.x + topPaddle.width) {
+    gameState.ball.y >= topPaddle.y - gameState.ball.radius &&
+    gameState.ball.x >= topPaddle.x &&
+    gameState.ball.x <= topPaddle.x + topPaddle.width) {
     gameState.ball.velocityY *= -1;
     // Add some randomness to make it more interesting
     gameState.ball.velocityX += (Math.random() - 0.5) * 2;
+    playSound();
   }
-  
+
   // Bottom paddle collision
   if (gameState.ball.y >= bottomPaddle.y - gameState.ball.radius &&
-      gameState.ball.y <= bottomPaddle.y + bottomPaddle.height + gameState.ball.radius &&
-      gameState.ball.x >= bottomPaddle.x &&
-      gameState.ball.x <= bottomPaddle.x + bottomPaddle.width) {
+    gameState.ball.y <= bottomPaddle.y + bottomPaddle.height + gameState.ball.radius &&
+    gameState.ball.x >= bottomPaddle.x &&
+    gameState.ball.x <= bottomPaddle.x + bottomPaddle.width) {
     gameState.ball.velocityY *= -1;
     // Add some randomness to make it more interesting
     gameState.ball.velocityX += (Math.random() - 0.5) * 2;
+    playSound();
   }
-  
+
   // Ball out of bounds - reset
   if (gameState.ball.y < 0 || gameState.ball.y > gameState.stage.height) {
     resetBall();
   }
-  
+
   // Keep ball within stage bounds
   gameState.ball.x = Math.max(gameState.ball.radius, Math.min(gameState.stage.width - gameState.ball.radius, gameState.ball.x));
   gameState.ball.y = Math.max(gameState.ball.radius, Math.min(gameState.stage.height - gameState.ball.radius, gameState.ball.y));
@@ -108,7 +111,12 @@ function resetGame() {
 
 io.on('connection', (socket) => {
   console.log('Player connected:', socket.id);
-  
+
+  // Play sounds
+  const playSound = () => {
+    socket.emit("playSound")
+  }
+
   // Assign player to available position
   if (!gameState.players.top) {
     gameState.players.top = socket.id;
@@ -122,38 +130,38 @@ io.on('connection', (socket) => {
     socket.emit('gameFull');
     return;
   }
-  
+
   // Start game if both players are connected
   if (gameState.players.top && gameState.players.bottom) {
     resetGame();
-    startGameLoop();
+    startGameLoop(playSound);
     io.emit('gameStart');
   }
-  
+
   // Send current game state to new player
   socket.emit('gameState', gameState);
-  
+
   // Handle paddle movement
   socket.on('movePaddle', (data) => {
     const { position, x } = data;
-    
+
     if (position === 'top' && gameState.players.top === socket.id) {
       gameState.paddles.top.x = Math.max(0, Math.min(gameState.stage.width - gameState.paddles.top.width, x));
     } else if (position === 'bottom' && gameState.players.bottom === socket.id) {
       gameState.paddles.bottom.x = Math.max(0, Math.min(gameState.stage.width - gameState.paddles.bottom.width, x));
     }
   });
-  
+
   // Handle disconnect
   socket.on('disconnect', () => {
     console.log('Player disconnected:', socket.id);
-    
+
     if (gameState.players.top === socket.id) {
       gameState.players.top = null;
     } else if (gameState.players.bottom === socket.id) {
       gameState.players.bottom = null;
     }
-    
+
     // Stop game if not enough players
     if (!gameState.players.top || !gameState.players.bottom) {
       if (gameInterval) {

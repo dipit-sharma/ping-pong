@@ -1,5 +1,6 @@
 import { defaultGameState } from '@/constants/Colors';
 import { useGameEngine } from '@/hooks/useGameEngine';
+import { useSound } from '@/hooks/useSound';
 import { router } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
@@ -47,12 +48,13 @@ export const PingPongGame: React.FC<PingPongGameProps> = ({
 
   const socketRef = useRef<Socket | null>(null);
   const gameStateRef = useRef<GameState | null>(null);
+  const { playSound } = useSound();
 
   const onGameOver = () => {
     setShowModal(true);
     setGameStatus('over')
   }
-  const { gameState: singlePlayerState, updateBottomPaddle = () => { } } = useGameEngine(serverUrl, onGameOver);
+  const { gameState: singlePlayerState, updateBottomPaddle = () => { } } = useGameEngine(serverUrl, onGameOver, playSound);
 
   useEffect(() => {
     if (!serverUrl) {
@@ -85,6 +87,10 @@ export const PingPongGame: React.FC<PingPongGameProps> = ({
       setIsConnected(false);
       setGameStatus('stopped');
     });
+
+    socket.on('playSound', ()=>{
+      playSound();
+    })
 
     socket.on('playerAssigned', (data: { position: 'top' | 'bottom' }) => {
       console.log('Player assigned to:', data.position);
@@ -265,5 +271,18 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 14,
     marginBottom: 5,
+  },
+  testButton: {
+    backgroundColor: '#000000',
+    borderWidth: 2,
+    borderColor: '#808080',
+    borderRadius: 8,
+    padding: 10,
+    marginTop: 10,
+  },
+  testButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 }); 
