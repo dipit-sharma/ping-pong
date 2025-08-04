@@ -1,12 +1,16 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import React from "react";
+import { StyleSheet } from "react-native";
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
 import Animated, {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
-  withSpring
-} from 'react-native-reanimated';
+  withSpring,
+} from "react-native-reanimated";
 
 interface DraggablePaddleProps {
   x: number;
@@ -23,7 +27,7 @@ export const DraggablePaddle: React.FC<DraggablePaddleProps> = ({
   width = 100,
   height = 20,
   stageWidth,
-  onPositionChange
+  onPositionChange,
 }) => {
   const translateX = useSharedValue(x);
   const translateY = useSharedValue(y);
@@ -35,17 +39,20 @@ export const DraggablePaddle: React.FC<DraggablePaddleProps> = ({
     translateY.value = withSpring(y, { damping: 15, stiffness: 150 });
   }, [x, y]);
 
-  const gestureHandler = Gesture.Pan().onBegin((event) => {
-    context.value.startX = translateX.value;
-  }).onUpdate(event => {
-    const newX = context.value.startX + event.translationX;
-    const clampedX = Math.max(0, Math.min(stageWidth - width, newX));
-    translateX.value = clampedX;
-    runOnJS(onPositionChange)(translateX.value);
-  }).onEnd(() => {
-    const finalX = translateX.value;
-    runOnJS(onPositionChange)(finalX);
-  })
+  const gestureHandler = Gesture.Pan()
+    .onBegin((event) => {
+      context.value.startX = translateX.value;
+    })
+    .onUpdate((event) => {
+      const newX = context.value.startX + event.translationX;
+      const clampedX = Math.max(0, Math.min(stageWidth - width, newX));
+      translateX.value = clampedX;
+      runOnJS(onPositionChange)(translateX.value);
+    })
+    .onEnd(() => {
+      const finalX = translateX.value;
+      runOnJS(onPositionChange)(finalX);
+    });
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -57,24 +64,22 @@ export const DraggablePaddle: React.FC<DraggablePaddleProps> = ({
   });
 
   return (
-    <GestureDetector gesture={gestureHandler}>
-      <Animated.View
-        style={[
-          styles.paddle,
-          { width, height },
-          animatedStyle
-        ]}
-      />
-    </GestureDetector>
+    <GestureHandlerRootView>
+      <GestureDetector gesture={gestureHandler}>
+        <Animated.View
+          style={[styles.paddle, { width, height }, animatedStyle]}
+        />
+      </GestureDetector>
+    </GestureHandlerRootView>
   );
 };
 
 const styles = StyleSheet.create({
   paddle: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 4,
-    position: 'absolute',
-    shadowColor: '#FFFFFF',
+    position: "absolute",
+    shadowColor: "#FFFFFF",
     shadowOffset: {
       width: 0,
       height: 0,
@@ -83,4 +88,4 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-}); 
+});
