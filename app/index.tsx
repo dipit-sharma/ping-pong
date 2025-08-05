@@ -5,9 +5,10 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 interface HomePageProps {
   onSinglePlayer: () => void;
   onMultiplayer: () => void;
+  onLudo: () => void;
 }
 
-const HomePage: React.FC<HomePageProps> = ({ onSinglePlayer, onMultiplayer }) => {
+const HomePage: React.FC<HomePageProps> = ({ onSinglePlayer, onMultiplayer, onLudo }) => {
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
@@ -24,6 +25,13 @@ const HomePage: React.FC<HomePageProps> = ({ onSinglePlayer, onMultiplayer }) =>
             Play against another human online. Open this app in a second tab, play from both the tabs
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button} onPress={onLudo}>
+          <Text style={styles.buttonTitle}>Play Ludo</Text>
+          <Text style={styles.buttonDescription}>
+            Play ludo against my algorithm
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -38,10 +46,15 @@ export default function App() {
     router.push('/multiplayer');
   };
 
+  const handleLudo = () => {
+    router.push('/ludo');
+  };
+
   return (
     <HomePage 
       onSinglePlayer={handleSinglePlayer}
       onMultiplayer={handleMultiplayer}
+      onLudo={handleLudo}
     />
   );
 }

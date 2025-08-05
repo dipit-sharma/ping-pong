@@ -22,6 +22,7 @@ export default function RootLayout() {
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="single-player" options={{ headerShown: false }} />
         <Stack.Screen name="multiplayer" options={{ headerShown: false }} />
+        <Stack.Screen name="ludo" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
