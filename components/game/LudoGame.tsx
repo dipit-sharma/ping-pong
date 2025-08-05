@@ -1,10 +1,20 @@
+import { Player } from "@/class/Player";
 import { cW, W } from "@/constants/Colors";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import LudoGrid from "../LudoGrid";
 import { PlayerHome } from "../PlayerHome";
+import { Circle } from "./Circle";
+import { Square } from "./Square";
+import { Star } from "./Star";
+import { Triangle } from "./Triangle";
 
 export const LudoGame = () => {
+  const [player1, setPlayer1] = useState<Player>(new Player(<Square />, 0));
+  const [player2, setPlayer2] = useState<Player>(new Player(<Star />, 1));
+  const [player3, setPlayer3] = useState<Player>(new Player(<Circle />, 2));
+  const [player4, setPlayer4] = useState<Player>(new Player(<Triangle />, 3));
+
   useEffect(() => {
     LudoGrid.createGrids();
   }, []);
@@ -15,9 +25,9 @@ export const LudoGame = () => {
 
       <View style={styles.gameBoard}>
         <View style={styles.topRow}>
-          <PlayerHome size={W} />
+          <PlayerHome size={W} player={player1} />
           <LudoGrid.Grid1 />
-          <PlayerHome size={W} />
+          <PlayerHome size={W} player={player2} />
         </View>
         <View style={styles.topRow}>
           <LudoGrid.Grid3 />
@@ -32,9 +42,9 @@ export const LudoGame = () => {
           <LudoGrid.Grid4 />
         </View>
         <View style={styles.bottomRow}>
-          <PlayerHome size={W} />
+          <PlayerHome size={W} player={player3} />
           <LudoGrid.Grid2 />
-          <PlayerHome size={W} />
+          <PlayerHome size={W} player={player4} />
         </View>
       </View>
     </View>

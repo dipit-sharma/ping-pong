@@ -1,5 +1,7 @@
+import { ReactElement } from "react";
+
 export interface Goti {
-    shape: React.Component;
+    shape: ReactElement<any, any>;
     position: number;
     homePosition: number;
     steps: number;
