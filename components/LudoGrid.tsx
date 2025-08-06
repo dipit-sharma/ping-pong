@@ -1,7 +1,8 @@
 import { Cell } from "@/class/Cell";
 import { cW } from "@/constants/Colors";
+import { traverseEdge } from "@/utils/utils";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 class LudoGrid extends React.Component {
   render() {
@@ -14,22 +15,77 @@ class LudoGrid extends React.Component {
   static gridRight: Cell[][] = [];
 
   static createGrids() {
-    this.gridBottom = new Array(6).fill(
-      new Array(3).fill(new Cell(0, false, false, false, 0, []))
-    );
-    this.gridTop = new Array(6).fill(
-      new Array(3).fill(new Cell(0, false, false, false, 0, []))
-    );
+    // Initialize grids with proper Cell instances
+    this.gridBottom = new Array(6)
+      .fill(null)
+      .map(() =>
+        new Array(3)
+          .fill(null)
+          .map(() => new Cell(0, false, false, false, 0, []))
+      );
 
-    this.gridLeft = new Array(3).fill(
-      new Array(6).fill(new Cell(0, false, false, false, 0, []))
-    );
-    this.gridRight = new Array(3).fill(
-      new Array(6).fill(new Cell(0, false, false, false, 0, []))
-    );
+    this.gridTop = new Array(6)
+      .fill(null)
+      .map(() =>
+        new Array(3)
+          .fill(null)
+          .map(() => new Cell(0, false, false, false, 0, []))
+      );
+
+    this.gridLeft = new Array(3)
+      .fill(null)
+      .map(() =>
+        new Array(6)
+          .fill(null)
+          .map(() => new Cell(0, false, false, false, 0, []))
+      );
+    this.gridRight = new Array(3)
+      .fill(null)
+      .map(() =>
+        new Array(6)
+          .fill(null)
+          .map(() => new Cell(0, false, false, false, 0, []))
+      );
+
+    let id = 1;
+    id = traverseEdge({
+      grid: this.gridTop,
+      startX: 5,
+      startY: 0,
+      id: id,
+      exclude: { x: 5, y: 1 },
+    });
+
+    id = traverseEdge({
+      grid: this.gridRight,
+      startX: 0,
+      startY: 0,
+      id: id,
+      exclude: { x: 1, y: 0 },
+    });
+
+    id = traverseEdge({
+      grid: this.gridBottom,
+      startX: 0,
+      startY: 2,
+      id: id,
+      exclude: { x: 0, y: 1 },
+    });
+
+    id = traverseEdge({
+      grid: this.gridLeft,
+      startX: 2,
+      startY: 5,
+      id: id,
+      exclude: { x: 1, y: 5 },
+    });
+
+    // assign safe cells
+    // assign home cells
+    // assign path cells
   }
 
-  static Grid1 = () => {
+  static GridBottom = () => {
     if (LudoGrid.gridBottom.length === 0) {
       LudoGrid.createGrids();
     }
@@ -41,6 +97,9 @@ class LudoGrid extends React.Component {
               {row.map((cell, cellIndex) => (
                 <View key={cellIndex} style={styles.cell}>
                   <View style={styles.cellContent}>
+                    <Text style={{ color: "white", fontSize: 10 }}>
+                      {cell.getId()}
+                    </Text>
                     {cell.getGoties().map((goti, gotiIndex) => (
                       <View key={gotiIndex} style={styles.goti}>
                         {/* Render goti shape component here */}
@@ -56,7 +115,10 @@ class LudoGrid extends React.Component {
     );
   };
 
-  static Grid2 = () => {
+  static TopGrid = () => {
+    if (LudoGrid.gridTop.length === 0) {
+      LudoGrid.createGrids();
+    }
     return (
       <View style={styles.vGrid}>
         <View style={styles.grid2Content}>
@@ -65,6 +127,9 @@ class LudoGrid extends React.Component {
               {row.map((cell, cellIndex) => (
                 <View key={cellIndex} style={styles.cell}>
                   <View style={styles.cellContent}>
+                    <Text style={{ color: "white", fontSize: 10 }}>
+                      {cell.getId()}
+                    </Text>
                     {cell.getGoties().map((goti, gotiIndex) => (
                       <View key={gotiIndex} style={styles.goti}>
                         {/* Render goti shape component here */}
@@ -89,6 +154,9 @@ class LudoGrid extends React.Component {
               {row.map((cell, cellIndex) => (
                 <View key={cellIndex} style={styles.cell}>
                   <View style={styles.cellContent}>
+                    <Text style={{ color: "white", fontSize: 10 }}>
+                      {cell.getId()}
+                    </Text>
                     {cell.getGoties().map((goti, gotiIndex) => (
                       <View key={gotiIndex} style={styles.goti}>
                         {/* Render goti shape component here */}
@@ -113,6 +181,9 @@ class LudoGrid extends React.Component {
               {row.map((cell, cellIndex) => (
                 <View key={cellIndex} style={styles.cell}>
                   <View style={styles.cellContent}>
+                    <Text style={{ color: "white", fontSize: 10 }}>
+                      {cell.getId()}
+                    </Text>
                     {cell.getGoties().map((goti, gotiIndex) => (
                       <View key={gotiIndex} style={styles.goti}>
                         {/* Render goti shape component here */}
@@ -129,12 +200,11 @@ class LudoGrid extends React.Component {
   };
 }
 
-
 const styles = StyleSheet.create({
   vGrid: {
     width: cW * 3,
     height: cW * 6,
-    backgroundColor: '#2a2a2a',
+    backgroundColor: "#2a2a2a",
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
@@ -146,7 +216,7 @@ const styles = StyleSheet.create({
   hGrid: {
     width: cW * 6,
     height: cW * 3,
-    backgroundColor: '#2a2a2a',
+    backgroundColor: "#2a2a2a",
     borderRadius: 8,
     margin: 5,
     justifyContent: "center",
@@ -163,27 +233,27 @@ const styles = StyleSheet.create({
     // Grid 4 specific styles
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   cell: {
     width: cW,
     height: cW,
     borderWidth: 1,
-    borderColor: '#1a1a1a',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderColor: "#1a1a1a",
+    justifyContent: "center",
+    alignItems: "center",
   },
   cellContent: {
     flex: 1,
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
   },
   goti: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     margin: 1,
   },
 });

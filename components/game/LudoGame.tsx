@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from "react-native";
 import LudoGrid from "../LudoGrid";
 import { PlayerHome } from "../PlayerHome";
 import { Circle } from "./Circle";
+import Dice from "./Dice";
 import { Square } from "./Square";
 import { Star } from "./Star";
 import { Triangle } from "./Triangle";
@@ -18,6 +19,7 @@ export const LudoGame = () => {
   useEffect(() => {
     LudoGrid.createGrids();
   }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Ludo Game</Text>
@@ -26,24 +28,25 @@ export const LudoGame = () => {
       <View style={styles.gameBoard}>
         <View style={styles.topRow}>
           <PlayerHome size={W} player={player1} />
-          <LudoGrid.Grid1 />
+          <LudoGrid.TopGrid />
           <PlayerHome size={W} player={player2} />
         </View>
         <View style={styles.topRow}>
           <LudoGrid.Grid3 />
-          <View
+          {/* <View
             style={{
               width: (cW - 3) * 3,
               height: (cW - 3) * 3,
               backgroundColor: "#808080",
               borderRadius: 8,
             }}
-          />
+          /> */}
+          <Dice size={(cW - 3) * 3} />
           <LudoGrid.Grid4 />
         </View>
         <View style={styles.bottomRow}>
           <PlayerHome size={W} player={player3} />
-          <LudoGrid.Grid2 />
+          <LudoGrid.GridBottom />
           <PlayerHome size={W} player={player4} />
         </View>
       </View>

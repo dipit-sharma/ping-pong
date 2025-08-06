@@ -47,7 +47,7 @@ export const defaultGameState = {
   }
 };
 
-export const safeCells = new Set([0, 1, 2, 3, 4]);
-export const homeCells = new Set([18, 19, 20]);
+export const safeCells = new Set([4, 17, 30, 43]);
+export const homeCells = new Set([9, 22, 35, 48]);
 export const cW = 25;
 export const W = 140;

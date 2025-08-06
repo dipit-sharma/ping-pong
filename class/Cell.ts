@@ -28,4 +28,12 @@ export class Cell {
   getGoties(): Goti[] {
     return this.goties;
   }
+
+  getId(): number {
+    return this.id;
+  }
+
+  setId(id: number) {
+    this.id = id;
+  }
 }
