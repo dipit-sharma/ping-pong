@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { useLudoGame } from './LudoGame';
 
 interface DiceProps {
   size?: number;
@@ -12,7 +13,7 @@ export const Dice: React.FC<DiceProps> = ({
   onRollComplete,
   isAnimating = true
 }) => {
-  const [currentValue, setCurrentValue] = useState<number>(1);
+  const {setDiceValue, diceValue} = useLudoGame();
   const [isRolling, setIsRolling] = useState<boolean>(false);
   
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -56,14 +57,14 @@ export const Dice: React.FC<DiceProps> = ({
 
     const rollInterval = setInterval(() => {
       if (currentIndex < numbers.length) {
-        setCurrentValue(numbers[currentIndex]);
+        setDiceValue(numbers[currentIndex]);
         currentIndex++;
       } else {
         clearInterval(rollInterval);
         
         // Final random number
         const finalValue = Math.floor(Math.random() * 6) + 1;
-        setCurrentValue(finalValue);
+        setDiceValue(finalValue);
         setIsRolling(false);
         
         // Callback with final value
@@ -92,7 +93,7 @@ export const Dice: React.FC<DiceProps> = ({
         ]}
       >
         <Text style={[styles.diceText, { fontSize: size * 0.4 }]}>
-          {currentValue}
+          {diceValue}
         </Text>
       </Animated.View>
     </TouchableOpacity>

@@ -29,7 +29,7 @@ export const PlayerHome: React.FC<PlayerHomeProps> = ({
               { width: smallSquareSize, height: smallSquareSize },
             ]}
           >
-            {player.isHome(0) ? player.getGotiArray()[0].shape : <View />}
+            {player.isHome(0) ? player.getGotiArray()[0].shape() : <View />}
           </View>
           <View
             style={[
@@ -37,7 +37,7 @@ export const PlayerHome: React.FC<PlayerHomeProps> = ({
               { width: smallSquareSize, height: smallSquareSize },
             ]}
           >
-            {player.isHome(1) ? player.getGotiArray()[1].shape : <View />}
+            {player.isHome(1) ? player.getGotiArray()[1].shape() : <View />}
           </View>
         </View>
         <View style={styles.bottomRow}>
@@ -47,7 +47,7 @@ export const PlayerHome: React.FC<PlayerHomeProps> = ({
               { width: smallSquareSize, height: smallSquareSize },
             ]}
           >
-            {player.isHome(2) ? player.getGotiArray()[2].shape : <View />}
+            {player.isHome(2) ? player.getGotiArray()[2].shape() : <View />}
           </View>
           <View
             style={[
@@ -55,7 +55,7 @@ export const PlayerHome: React.FC<PlayerHomeProps> = ({
               { width: smallSquareSize, height: smallSquareSize },
             ]}
           >
-            {player.isHome(3) ? player.getGotiArray()[3].shape : <View />}
+            {player.isHome(3) ? player.getGotiArray()[3].shape() : <View />}
           </View>
         </View>
       </View>
