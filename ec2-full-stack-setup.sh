@@ -22,8 +22,7 @@ sudo systemctl start nginx
 sudo systemctl enable nginx
 
 # Create directories
-mkdir -p /home/ec2-user/ping-pong-app
-cd /home/ec2-user/ping-pong-app
+cd /home/ec2-user/ping-pong
 
 # Install frontend dependencies
 echo "📦 Installing frontend dependencies..."
@@ -57,7 +56,7 @@ module.exports = {
       name: 'ping-pong-frontend',
       script: 'npm',
       args: 'start',
-      cwd: '/home/ec2-user/ping-pong-app',
+      cwd: '/home/ec2-user/ping-pong',
       instances: 1,
       autorestart: true,
       watch: false,
@@ -108,7 +107,7 @@ EOF
 sudo systemctl restart nginx
 
 # Start both services with PM2
-cd /home/ec2-user/ping-pong-app/server
+cd /home/ec2-user/ping-pong/server
 pm2 start ecosystem.config.js
 pm2 save
 pm2 startup
