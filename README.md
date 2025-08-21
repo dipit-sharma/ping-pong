@@ -181,3 +181,5 @@ For detailed deployment instructions, see [`server/EC2-DEPLOYMENT.md`](server/EC
 - **Gestures**: React Native Gesture Handler for touch controls
 
 ## Project Structure
+
+//  curl http://51.21.193.65:3001 -> test server
