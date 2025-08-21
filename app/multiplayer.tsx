@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native';
 export default function MultiplayerScreen() {
   return (
     <View style={styles.container}>
-      <PingPongGame serverUrl="http://localhost:3001" />
+      <PingPongGame serverUrl="http://51.21.193.65:3001/" />
     </View>
   );
 }
