@@ -63,6 +63,100 @@ A real-time multiplayer ping pong game built with React Native, React Reanimated
    - Press `a` for Android emulator
    - Press `w` for web browser
 
+## AWS Server Setup Docs
+
+### 🚀 Deploying to AWS EC2
+
+For production deployment, you can host the Socket.IO server on AWS EC2.
+
+#### Prerequisites
+
+- AWS Account
+- EC2 instance running Amazon Linux 2
+- Security group with port 3001 open
+- SSH access to your EC2 instance
+
+#### Quick Deployment
+
+1. **Launch EC2 Instance:**
+   - Choose Amazon Linux 2 AMI
+   - Select t2.micro (free tier) or t3.small
+   - Configure security group with port 3001 open
+
+2. **Upload Server Code:**
+   ```bash
+   scp -i your-key.pem -r server/ ec2-user@YOUR-EC2-IP:/home/ec2-user/ping-pong-server
+   ```
+
+3. **Run Setup Script:**
+   ```bash
+   ssh -i your-key.pem ec2-user@YOUR-EC2-IP
+   cd ping-pong-server
+   chmod +x ec2-setup.sh
+   ./ec2-setup.sh
+   ```
+
+4. **Verify Deployment:**
+   ```bash
+   pm2 status
+   curl http://localhost:3001
+   ```
+
+#### What the Setup Script Does
+
+The `ec2-setup.sh` script automates:
+
+- **System Updates**: Latest security patches
+- **Node.js Installation**: Using NVM for version management
+- **PM2 Setup**: Process management for production
+- **Dependencies**: Installs all required npm packages
+- **Server Configuration**: Production-ready settings
+- **Auto-restart**: Keeps server running after crashes
+
+#### Server Management
+
+```bash
+# Check server status
+pm2 status
+
+# View logs
+pm2 logs ping-pong-server
+
+# Restart server
+pm2 restart ping-pong-server
+
+# Monitor performance
+pm2 monit
+```
+
+#### Troubleshooting
+
+**Server Not Accessible:**
+- Check security group inbound rules for port 3001
+- Ensure server listens on `0.0.0.0` not just `localhost`
+- Verify PM2 process is running: `pm2 status`
+
+**Connection Issues:**
+- Test local connection: `curl http://localhost:3001`
+- Check server logs: `pm2 logs ping-pong-server`
+- Verify Node.js installation: `node --version`
+
+#### Cost Optimization
+
+- **Free Tier**: t2.micro instance (750 hours/month)
+- **Production**: t3.small (~$15/month) for better performance
+- **Scaling**: Consider load balancer for high availability
+
+#### Security Best Practices
+
+1. Keep system updated: `sudo yum update -y`
+2. Use security groups to restrict access
+3. Monitor logs regularly
+4. Backup configuration: `pm2 save`
+5. Use IAM roles with least privilege
+
+For detailed deployment instructions, see [`server/EC2-DEPLOYMENT.md`](server/EC2-DEPLOYMENT.md).
+
 ## How to Play
 
 1. Open the app on two different devices/browsers
@@ -87,44 +181,3 @@ A real-time multiplayer ping pong game built with React Native, React Reanimated
 - **Gestures**: React Native Gesture Handler for touch controls
 
 ## Project Structure
-
-```
-ping-pong/
-├── app/                    # Expo Router app directory
-├── components/
-│   └── game/              # Game components
-│       ├── Stage.tsx      # Game stage component
-│       ├── Paddle.tsx     # Static paddle component
-│       ├── DraggablePaddle.tsx # User-controlled paddle
-│       ├── Ball.tsx       # Ball component
-│       └── PingPongGame.tsx # Main game component
-├── server/                # Socket.IO server
-│   ├── server.js         # Main server file
-│   ├── package.json      # Server dependencies
-│   └── README.md         # Server documentation
-└── package.json          # Client dependencies
-```
-
-## Development
-
-### Adding New Features
-
-- Game components are in `components/game/`
-- Server logic is in `server/server.js`
-- Main game screen is in `app/(tabs)/index.tsx`
-
-### Customization
-
-- Modify game dimensions in `server/server.js` (stage width/height)
-- Adjust ball speed and physics in the `updateBall()` function
-- Change visual styling in component StyleSheet objects
-
-## Troubleshooting
-
-- **Connection Issues**: Make sure the server is running on port 3001
-- **Gesture Problems**: Ensure React Native Gesture Handler is properly configured
-- **Animation Lag**: Check that React Reanimated is working correctly
-
-## License
-
-This project is open source and available under the MIT License.
