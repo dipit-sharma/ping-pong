@@ -1,10 +1,19 @@
 import { Cell } from "@/class/Cell";
 import { cW } from "@/constants/Colors";
+import { Goti as GotiInterface } from "@/interface/utils";
 import { traverseEdge } from "@/utils/utils";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import Goti from "./Goti";
 
-class LudoGrid extends React.Component {
+interface LudoGridProps {
+  isGotiSelectionActive?: boolean;
+  currentPlayerGoties?: GotiInterface[];
+  onGotiSelect?: (goti: GotiInterface) => void;
+  boardMap?: Map<number, any[]>;
+}
+
+class LudoGrid extends React.Component<LudoGridProps> {
   render() {
     return <div>LudoGrid</div>;
   }
@@ -85,10 +94,20 @@ class LudoGrid extends React.Component {
     // assign path cells
   }
 
-  static GridBottom = () => {
+  static GridBottom = ({
+    isGotiSelectionActive,
+    currentPlayerGoties,
+    onGotiSelect,
+    boardMap,
+  }: LudoGridProps) => {
     if (LudoGrid.gridBottom.length === 0) {
       LudoGrid.createGrids();
     }
+
+    const isGotiSelectable = (goti: GotiInterface) => {
+      return currentPlayerGoties?.some((g) => g === goti) || false;
+    };
+
     return (
       <View style={styles.vGrid}>
         <View style={styles.grid1Content}>
@@ -100,10 +119,16 @@ class LudoGrid extends React.Component {
                     <Text style={{ color: "white", fontSize: 10 }}>
                       {cell.getId()}
                     </Text>
-                    {cell.getGoties().map((goti, gotiIndex) => (
-                      <View key={gotiIndex} style={styles.goti}>
-                        {/* Render goti shape component here */}
-                      </View>
+                    {boardMap?.get(cell.getId())?.map((goti, gotiIndex) => (
+                      <Goti
+                        key={gotiIndex}
+                        goti={goti}
+                        isSelectable={isGotiSelectable(goti)}
+                        isAnimating={isGotiSelectionActive}
+                        onSelect={onGotiSelect}
+                        color="#00FF00" // Green for top player
+                        size={16}
+                      />
                     ))}
                   </View>
                 </View>
@@ -115,10 +140,20 @@ class LudoGrid extends React.Component {
     );
   };
 
-  static TopGrid = () => {
+  static TopGrid = ({
+    isGotiSelectionActive,
+    currentPlayerGoties,
+    onGotiSelect,
+    boardMap,
+  }: LudoGridProps) => {
     if (LudoGrid.gridTop.length === 0) {
       LudoGrid.createGrids();
     }
+
+    const isGotiSelectable = (goti: GotiInterface) => {
+      return currentPlayerGoties?.some((g) => g === goti) || false;
+    };
+
     return (
       <View style={styles.vGrid}>
         <View style={styles.grid2Content}>
@@ -130,10 +165,16 @@ class LudoGrid extends React.Component {
                     <Text style={{ color: "white", fontSize: 10 }}>
                       {cell.getId()}
                     </Text>
-                    {cell.getGoties().map((goti, gotiIndex) => (
-                      <View key={gotiIndex} style={styles.goti}>
-                        {/* Render goti shape component here */}
-                      </View>
+                    {boardMap?.get(cell.getId())?.map((goti, gotiIndex) => (
+                      <Goti
+                        key={gotiIndex}
+                        goti={goti}
+                        isSelectable={isGotiSelectable(goti)}
+                        isAnimating={isGotiSelectionActive}
+                        onSelect={onGotiSelect}
+                        color="#00FF00" // Green for top player
+                        size={16}
+                      />
                     ))}
                   </View>
                 </View>
@@ -145,7 +186,16 @@ class LudoGrid extends React.Component {
     );
   };
 
-  static Grid3 = () => {
+  static Grid3 = ({
+    isGotiSelectionActive,
+    currentPlayerGoties,
+    onGotiSelect,
+    boardMap,
+  }: LudoGridProps) => {
+    const isGotiSelectable = (goti: GotiInterface) => {
+      return currentPlayerGoties?.some((g) => g === goti) || false;
+    };
+
     return (
       <View style={styles.hGrid}>
         <View style={styles.grid3Content}>
@@ -157,10 +207,16 @@ class LudoGrid extends React.Component {
                     <Text style={{ color: "white", fontSize: 10 }}>
                       {cell.getId()}
                     </Text>
-                    {cell.getGoties().map((goti, gotiIndex) => (
-                      <View key={gotiIndex} style={styles.goti}>
-                        {/* Render goti shape component here */}
-                      </View>
+                    {boardMap?.get(cell.getId())?.map((goti, gotiIndex) => (
+                      <Goti
+                        key={gotiIndex}
+                        goti={goti}
+                        isSelectable={isGotiSelectable(goti)}
+                        isAnimating={isGotiSelectionActive}
+                        onSelect={onGotiSelect}
+                        color="#00FF00" // Green for top player
+                        size={16}
+                      />
                     ))}
                   </View>
                 </View>
@@ -172,7 +228,16 @@ class LudoGrid extends React.Component {
     );
   };
 
-  static Grid4 = () => {
+  static Grid4 = ({
+    isGotiSelectionActive,
+    currentPlayerGoties,
+    onGotiSelect,
+    boardMap,
+  }: LudoGridProps) => {
+    const isGotiSelectable = (goti: GotiInterface) => {
+      return currentPlayerGoties?.some((g) => g === goti) || false;
+    };
+
     return (
       <View style={styles.hGrid}>
         <View style={styles.grid4Content}>
@@ -184,10 +249,16 @@ class LudoGrid extends React.Component {
                     <Text style={{ color: "white", fontSize: 10 }}>
                       {cell.getId()}
                     </Text>
-                    {cell.getGoties().map((goti, gotiIndex) => (
-                      <View key={gotiIndex} style={styles.goti}>
-                        {/* Render goti shape component here */}
-                      </View>
+                    {boardMap?.get(cell.getId())?.map((goti, gotiIndex) => (
+                      <Goti
+                        key={gotiIndex}
+                        goti={goti}
+                        isSelectable={isGotiSelectable(goti)}
+                        isAnimating={isGotiSelectionActive}
+                        onSelect={onGotiSelect}
+                        color="#00FF00" // Green for top player
+                        size={16}
+                      />
                     ))}
                   </View>
                 </View>

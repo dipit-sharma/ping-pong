@@ -1,21 +1,29 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { useLudoGame } from './LudoGame';
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { useLudoGame } from "./LudoGame";
 
 interface DiceProps {
   size?: number;
   onRollComplete?: (value: number) => void;
   isAnimating?: boolean;
+  rollDice: (params: {
+    scaleAnim: Animated.Value;
+    setDiceValue: (value: number) => void;
+    setIsRolling: (isRolling: boolean) => void;
+    onRollComplete?: (value: number) => void;
+    pulseAnimation: Animated.CompositeAnimation;
+  }) => void;
 }
 
-export const Dice: React.FC<DiceProps> = ({ 
-  size = 60, 
+export const Dice: React.FC<DiceProps> = ({
+  size = 60,
   onRollComplete,
-  isAnimating = true
+  isAnimating = true,
+  rollDice: rollDiceFunction,
 }) => {
-  const {setDiceValue, diceValue} = useLudoGame();
+  const { setDiceValue, diceValue } = useLudoGame();
   const [isRolling, setIsRolling] = useState<boolean>(false);
-  
+
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const opacityAnim = useRef(new Animated.Value(1)).current;
 
@@ -46,33 +54,13 @@ export const Dice: React.FC<DiceProps> = ({
   }, [isAnimating, scaleAnim]);
 
   const rollDice = () => {
-    if (isRolling) return;
-
-    setIsRolling(true);
-    scaleAnim.stopAnimation();
-
-    // Display 5 random numbers for 2 seconds (400ms each)
-    const numbers = Array.from({ length: 5 }, () => Math.floor(Math.random() * 6) + 1);
-    let currentIndex = 0;
-
-    const rollInterval = setInterval(() => {
-      if (currentIndex < numbers.length) {
-        setDiceValue(numbers[currentIndex]);
-        currentIndex++;
-      } else {
-        clearInterval(rollInterval);
-        
-        // Final random number
-        const finalValue = Math.floor(Math.random() * 6) + 1;
-        setDiceValue(finalValue);
-        setIsRolling(false);
-        
-        // Callback with final value
-        onRollComplete?.(finalValue);
-
-        pulseAnimation.start();
-      }
-    }, 400);
+    rollDiceFunction({
+      scaleAnim,
+      setDiceValue,
+      setIsRolling,
+      onRollComplete,
+      pulseAnimation,
+    });
   };
 
   return (
@@ -102,13 +90,13 @@ export const Dice: React.FC<DiceProps> = ({
 
 const styles = StyleSheet.create({
   dice: {
-    backgroundColor: '#808080',
+    backgroundColor: "#808080",
     borderWidth: 2,
-    borderColor: '#808080',
+    borderColor: "#808080",
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -118,9 +106,9 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   diceText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
 
