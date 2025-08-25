@@ -114,10 +114,16 @@ class LudoGrid extends React.Component<LudoGridProps> {
           {LudoGrid.gridBottom.map((row, rowIndex) => (
             <View key={rowIndex} style={styles.row}>
               {row.map((cell, cellIndex) => (
-                <View key={cellIndex} style={styles.cell}>
+                <View
+                  key={cellIndex}
+                  style={[
+                    styles.cell,
+                    { backgroundColor: cell.getIsSafe() || cell.getId() === 0 ? "#3d3d3d" : "#2a2a2a" },
+                  ]}
+                >
                   <View style={styles.cellContent}>
                     <Text style={{ color: "white", fontSize: 10 }}>
-                      {cell.getId()}
+                      
                     </Text>
                     {boardMap?.get(cell.getId())?.map((goti, gotiIndex) => (
                       <Goti
@@ -160,10 +166,18 @@ class LudoGrid extends React.Component<LudoGridProps> {
           {LudoGrid.gridTop.map((row, rowIndex) => (
             <View key={rowIndex} style={styles.row}>
               {row.map((cell, cellIndex) => (
-                <View key={cellIndex} style={styles.cell}>
+                <View
+                  key={cellIndex}
+                  style={[
+                    styles.cell,
+                    {
+                      backgroundColor: cell.getIsSafe() || cell.getId() === 0 ? "#3d3d3d" : "#2a2a2a",
+                    },
+                  ]}
+                >
                   <View style={styles.cellContent}>
                     <Text style={{ color: "white", fontSize: 10 }}>
-                      {cell.getId()}
+                      
                     </Text>
                     {boardMap?.get(cell.getId())?.map((goti, gotiIndex) => (
                       <Goti
@@ -202,10 +216,16 @@ class LudoGrid extends React.Component<LudoGridProps> {
           {LudoGrid.gridLeft.map((row, rowIndex) => (
             <View key={rowIndex} style={styles.row}>
               {row.map((cell, cellIndex) => (
-                <View key={cellIndex} style={styles.cell}>
+                <View
+                  key={cellIndex}
+                  style={[
+                    styles.cell,
+                    { backgroundColor: cell.getIsSafe() || cell.getId() === 0 ? "#3d3d3d" : "#2a2a2a" },
+                  ]}
+                >
                   <View style={styles.cellContent}>
                     <Text style={{ color: "white", fontSize: 10 }}>
-                      {cell.getId()}
+                      
                     </Text>
                     {boardMap?.get(cell.getId())?.map((goti, gotiIndex) => (
                       <Goti
@@ -244,10 +264,16 @@ class LudoGrid extends React.Component<LudoGridProps> {
           {LudoGrid.gridRight.map((row, rowIndex) => (
             <View key={rowIndex} style={styles.row}>
               {row.map((cell, cellIndex) => (
-                <View key={cellIndex} style={styles.cell}>
+                <View
+                  key={cellIndex}
+                  style={[
+                    styles.cell,
+                    { backgroundColor: cell.getIsSafe() || cell.getId() === 0 ? "#3d3d3d" : "#2a2a2a" },
+                  ]}
+                >
                   <View style={styles.cellContent}>
                     <Text style={{ color: "white", fontSize: 10 }}>
-                      {cell.getId()}
+                      
                     </Text>
                     {boardMap?.get(cell.getId())?.map((goti, gotiIndex) => (
                       <Goti

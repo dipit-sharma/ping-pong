@@ -55,7 +55,7 @@ export const PlayerHome: React.FC<PlayerHomeProps> = ({
           >
             {player.isHome(1) ? (
               <Goti
-                goti={player.getGotiArray()[0]}
+                goti={player.getGotiArray()[1]}
                 isSelectable={true}
                 isAnimating={isGotiSelectionActive}
                 onSelect={handleGotiSelect}
@@ -75,7 +75,7 @@ export const PlayerHome: React.FC<PlayerHomeProps> = ({
           >
             {player.isHome(2) ? (
               <Goti
-                goti={player.getGotiArray()[0]}
+                goti={player.getGotiArray()[2]}
                 isSelectable={true}
                 isAnimating={isGotiSelectionActive}
                 onSelect={handleGotiSelect}
@@ -93,7 +93,7 @@ export const PlayerHome: React.FC<PlayerHomeProps> = ({
           >
             {player.isHome(3) ? (
               <Goti
-                goti={player.getGotiArray()[0]}
+                goti={player.getGotiArray()[3]}
                 isSelectable={true}
                 isAnimating={isGotiSelectionActive}
                 onSelect={handleGotiSelect}

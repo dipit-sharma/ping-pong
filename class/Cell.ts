@@ -1,3 +1,4 @@
+import { homeCells, safeCells } from "@/constants/Colors";
 import { Goti } from "@/interface/utils";
 
 export class Cell {
@@ -35,5 +36,9 @@ export class Cell {
 
   setId(id: number) {
     this.id = id;
+  }
+
+  getIsSafe(): boolean {
+    return safeCells.has(this.id) || homeCells.has(this.id);
   }
 }
