@@ -77,8 +77,13 @@ Create an Artifact Registry Docker repository once:
 
 ```bash
 gcloud artifacts repositories create cloud-run-source-deploy \
+   --project=tag-along-98b44 \
    --repository-format=docker \
-   --location=us-central1
+   --location=europe-west1
+
+gcloud artifacts repositories describe cloud-run-source-deploy \
+   --project=tag-along-98b44 \
+   --location=europe-west1
 ```
 
 Build and deploy from the project root using [cloudbuild.yaml](cloudbuild.yaml):
@@ -87,7 +92,7 @@ Build and deploy from the project root using [cloudbuild.yaml](cloudbuild.yaml):
 gcloud builds submit \
    --config=cloudbuild.yaml \
    --project=tag-along-98b44 \
-   --substitutions=_REGION=us-central1,_REPOSITORY=cloud-run-source-deploy,_SERVICE_NAME=ping-pong \
+   --substitutions=_REGION=europe-west1,_REPOSITORY=cloud-run-source-deploy,_SERVICE_NAME=ping-pong \
    --service-account=projects/tag-along-98b44/serviceAccounts/CLOUD_BUILD_SERVICE_ACCOUNT
 ```
 

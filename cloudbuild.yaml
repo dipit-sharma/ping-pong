@@ -24,7 +24,7 @@ steps:
       - --port=8080
 
 substitutions:
-  _REGION: us-central1
+  _REGION: europe-west1
   _REPOSITORY: cloud-run-source-deploy
   _SERVICE_NAME: ping-pong
 
