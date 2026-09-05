@@ -166,5 +166,6 @@ if (typeof module !== "undefined" && module.exports) {
 // Auto-start if running in browser
 if (typeof window !== "undefined") {
   // Uncomment the line below to auto-start the game
+  //
 }
 startGame();
