@@ -3,9 +3,11 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 
 export default function MultiplayerScreen() {
+  const serverUrl = process.env.EXPO_PUBLIC_API_URL ?? "/";
+
   return (
     <View style={styles.container}>
-      <PingPongGame serverUrl="http://174.129.82.119:3001/" />
+      <PingPongGame serverUrl={serverUrl} />
     </View>
   );
 }

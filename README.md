@@ -1,6 +1,6 @@
 # Ping Pong - Multiplayer Game
 
-A real-time multiplayer ping pong game built with React Native, React Reanimated, and Socket.IO. Game link -  http://51.21.193.65
+A real-time multiplayer ping pong game built with React Native, React Reanimated, and Socket.IO. Game link - http://51.21.193.65
 
 ## Features
 
@@ -28,12 +28,14 @@ A real-time multiplayer ping pong game built with React Native, React Reanimated
 ### Installation
 
 1. Clone the repository:
+
    ```bash
    git clone <repository-url>
    cd ping-pong
    ```
 
 2. Install client dependencies:
+
    ```bash
    npm install
    ```
@@ -48,12 +50,14 @@ A real-time multiplayer ping pong game built with React Native, React Reanimated
 ### Running the Application
 
 1. Start the Socket.IO server:
+
    ```bash
    cd server
    npm start
    ```
 
 2. In a new terminal, start the React Native app:
+
    ```bash
    npm start
    ```
@@ -62,6 +66,28 @@ A real-time multiplayer ping pong game built with React Native, React Reanimated
    - Press `i` for iOS simulator
    - Press `a` for Android emulator
    - Press `w` for web browser
+
+## Deploying to Google Cloud Run
+
+The Docker image runs the Expo web client and Socket.IO server together on the
+single port required by Cloud Run. Express serves the exported web app and
+Socket.IO handles multiplayer connections on the same origin.
+
+Build and deploy from the project root:
+
+```bash
+gcloud builds submit --tag gcr.io/PROJECT_ID/ping-pong
+gcloud run deploy ping-pong \
+   --image gcr.io/PROJECT_ID/ping-pong \
+   --platform managed \
+   --region REGION \
+   --allow-unauthenticated
+```
+
+The production client uses a relative Socket.IO URL (`/`), so no API URL
+change is needed after deployment. For local development with separate
+processes, set `EXPO_PUBLIC_API_URL=http://localhost:3001` before running the
+web build.
 
 ## AWS Server Setup Docs
 
@@ -84,11 +110,13 @@ For production deployment, you can host the Socket.IO server on AWS EC2.
    - Configure security group with port 3001 open
 
 2. **Upload Server Code:**
+
    ```bash
    scp -i your-key.pem -r server/ ec2-user@YOUR-EC2-IP:/home/ec2-user/ping-pong-server
    ```
 
 3. **Run Setup Script:**
+
    ```bash
    ssh -i your-key.pem ec2-user@YOUR-EC2-IP
    cd ping-pong-server
@@ -132,11 +160,13 @@ pm2 monit
 #### Troubleshooting
 
 **Server Not Accessible:**
+
 - Check security group inbound rules for port 3001
 - Ensure server listens on `0.0.0.0` not just `localhost`
 - Verify PM2 process is running: `pm2 status`
 
 **Connection Issues:**
+
 - Test local connection: `curl http://localhost:3001`
 - Check server logs: `pm2 logs ping-pong-server`
 - Verify Node.js installation: `node --version`
@@ -179,4 +209,3 @@ For detailed deployment instructions, see [`server/EC2-DEPLOYMENT.md`](server/EC
 - **Backend**: Node.js, Express, Socket.IO
 - **Animations**: React Reanimated for smooth 60fps animations
 - **Gestures**: React Native Gesture Handler for touch controls
-
