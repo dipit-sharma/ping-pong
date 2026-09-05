@@ -20,7 +20,10 @@ class NumberGame {
 
     // Validate user input
     if (userNumber < 1 || userNumber > 100) {
-      return { valid: false, message: "Please enter a number between 1 and 100!" };
+      return {
+        valid: false,
+        message: "Please enter a number between 1 and 100!",
+      };
     }
 
     // Check if numbers match
@@ -31,7 +34,7 @@ class NumberGame {
         userScore: this.userScore,
         computerNumber: this.computerNumber,
         userNumber: userNumber,
-        message: `You lost! You chose ${userNumber} and computer chose ${this.computerNumber}. Final score: ${this.userScore}`
+        message: `You lost! You chose ${userNumber} and computer chose ${this.computerNumber}. Final score: ${this.userScore}`,
       };
     } else {
       this.userScore++;
@@ -40,7 +43,7 @@ class NumberGame {
         userScore: this.userScore,
         computerNumber: this.computerNumber,
         userNumber: userNumber,
-        message: `You win this round! You chose ${userNumber} and computer chose ${this.computerNumber}. Score: ${this.userScore}/${this.maxScore}`
+        message: `You win this round! You chose ${userNumber} and computer chose ${this.computerNumber}. Score: ${this.userScore}/${this.maxScore}`,
       };
     }
   }
@@ -61,7 +64,7 @@ class NumberGame {
       userScore: this.userScore,
       computerNumber: this.computerNumber,
       gameOver: this.gameOver,
-      maxScore: this.maxScore
+      maxScore: this.maxScore,
     };
   }
 
@@ -74,15 +77,15 @@ class NumberGame {
 }
 
 // Terminal game using readline
-const readline = require('readline');
+const readline = require("readline");
 
 function startGame() {
   const game = new NumberGame();
   const rl = readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
   });
-  
+
   console.log("🎮 Welcome to the Number Game!");
   console.log("📋 Rules:");
   console.log("- Computer generates a number from 1-100");
@@ -100,10 +103,10 @@ function startGame() {
       } else {
         console.log("💀 GAME OVER! You lost!");
       }
-      
+
       // Ask to play again
       rl.question("Play again? (y/n): ", (answer) => {
-        if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes') {
+        if (answer.toLowerCase() === "y" || answer.toLowerCase() === "yes") {
           game.resetGame();
           console.log("\n🔄 Starting new game...\n");
           playRound();
@@ -117,11 +120,11 @@ function startGame() {
 
     // Generate computer's number
     game.generateComputerNumber();
-    
+
     // Get user input
     rl.question("Enter a number (1-100): ", (input) => {
       const userNumber = parseInt(input);
-      
+
       // Validate input
       if (isNaN(userNumber) || userNumber < 1 || userNumber > 100) {
         console.log("❌ Please enter a valid number between 1 and 100!");
@@ -129,21 +132,21 @@ function startGame() {
         playRound();
         return;
       }
-      
+
       // Play the round
       const result = game.playRound(userNumber);
-      
+
       console.log(`🎲 Computer chose: ${result.computerNumber}`);
       console.log(`👤 You chose: ${result.userNumber}`);
       console.log(`📢 ${result.message}`);
       console.log("");
-      
+
       // Continue to next round
       if (!result.gameOver) {
         console.log("⏳ Next round starting...");
         console.log("");
       }
-      
+
       // Small delay for better UX
       setTimeout(() => {
         playRound();
@@ -156,13 +159,12 @@ function startGame() {
 }
 
 // Export for use in other files
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = { NumberGame, startGame };
 }
 
 // Auto-start if running in browser
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   // Uncomment the line below to auto-start the game
-  // 
 }
 startGame();
