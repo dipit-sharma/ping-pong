@@ -76,9 +76,12 @@ Socket.IO handles multiplayer connections on the same origin.
 Build and deploy from the project root:
 
 ```bash
-gcloud builds submit --tag gcr.io/PROJECT_ID/ping-pong
+gcloud builds submit \
+   --tag gcr.io/tag-along-98b44/ping-pong \
+   --logging=CLOUD_LOGGING_ONLY \
+   --service-account=projects/tag-along-98b44/serviceAccounts/CLOUD_BUILD_SERVICE_ACCOUNT
 gcloud run deploy ping-pong \
-   --image gcr.io/PROJECT_ID/ping-pong \
+   --image gcr.io/tag-along-98b44/ping-pong \
    --platform managed \
    --region REGION \
    --allow-unauthenticated
@@ -88,6 +91,11 @@ The production client uses a relative Socket.IO URL (`/`), so no API URL
 change is needed after deployment. For local development with separate
 processes, set `EXPO_PUBLIC_API_URL=http://localhost:3001` before running the
 web build.
+
+If you do not use a custom Cloud Build service account, remove the
+`--service-account` option. If you want build logs in Cloud Storage instead,
+replace `--logging=CLOUD_LOGGING_ONLY` with
+`--gcs-log-dir=gs://BUCKET_NAME/cloud-build-logs`.
 
 ## AWS Server Setup Docs
 
