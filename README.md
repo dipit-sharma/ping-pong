@@ -1,6 +1,6 @@
 # Ping Pong - Multiplayer Game
 
-A real-time multiplayer ping pong game built with React Native, React Reanimated, and Socket.IO. Game link - http://51.21.193.65
+A real-time multiplayer ping pong game built with React Native, React Reanimated, and Socket.IO. Game link - [Link](https://ping-pong-981857893691.europe-west1.run.app/)
 
 ## Features
 
